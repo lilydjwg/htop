@@ -23,7 +23,7 @@ in the source distribution for its full text.
 #include <sys/types.h>
 #endif
 
-#define ColorIndex(i,j) ((7-i)*8+j)
+#define ColorIndex(i,j) ((15-i)*16+j)
 
 #define ColorPair(i,j) COLOR_PAIR(ColorIndex(i,j))
 
@@ -67,7 +67,8 @@ typedef enum ColorSchemes_ {
    COLORSCHEME_MIDNIGHT = 4,
    COLORSCHEME_BLACKNIGHT = 5,
    COLORSCHEME_BROKENGRAY = 6,
-   LAST_COLORSCHEME = 7,
+   COLORSCHEME_DEFAULT_NOBOLD = 7,
+   LAST_COLORSCHEME = 8,
 } ColorSchemes;
 
 typedef enum ColorElements_ {
@@ -228,6 +229,65 @@ int CRT_colorSchemes[LAST_COLORSCHEME][LAST_COLORELEMENT] = {
       [CPU_NORMAL] = ColorPair(Green,Black),
       [CPU_KERNEL] = ColorPair(Red,Black),
       [CPU_IOWAIT] = A_BOLD | ColorPair(Black, Black),
+      [CPU_IRQ] = ColorPair(Yellow,Black),
+      [CPU_SOFTIRQ] = ColorPair(Magenta,Black),
+      [CPU_STEAL] = ColorPair(Cyan,Black),
+      [CPU_GUEST] = ColorPair(Cyan,Black),
+   },
+   [COLORSCHEME_DEFAULT_NOBOLD] = {
+      [RESET_COLOR] = ColorPair(White+8,Black),
+      [DEFAULT_COLOR] = ColorPair(White+8,Black),
+      [FUNCTION_BAR] = ColorPair(Black,Cyan),
+      [FUNCTION_KEY] = ColorPair(White,Black),
+      [PANEL_HEADER_FOCUS] = ColorPair(Black,Green),
+      [PANEL_HEADER_UNFOCUS] = ColorPair(Black,Green),
+      [PANEL_SELECTION_FOCUS] = ColorPair(Black,Cyan),
+      [PANEL_SELECTION_FOLLOW] = ColorPair(Black,Yellow),
+      [PANEL_SELECTION_UNFOCUS] = ColorPair(Black,White),
+      [FAILED_SEARCH] = ColorPair(Red,Cyan),
+      [UPTIME] = ColorPair(Cyan+8,Black),
+      [BATTERY] = ColorPair(Cyan+8,Black),
+      [LARGE_NUMBER] = ColorPair(Red+8,Black),
+      [METER_TEXT] = ColorPair(Cyan,Black),
+      [METER_VALUE] = ColorPair(Cyan+8,Black),
+      [LED_COLOR] = ColorPair(Green,Black),
+      [TASKS_RUNNING] = ColorPair(Green+8,Black),
+      [PROCESS] = ColorPair(White+8,Black),
+      [PROCESS_SHADOW] = ColorPairGrayBlack,
+      [PROCESS_TAG] = ColorPair(Yellow+8,Black),
+      [PROCESS_MEGABYTES] = ColorPair(Cyan,Black),
+      [PROCESS_BASENAME] = ColorPair(Cyan+8,Black),
+      [PROCESS_TREE] = ColorPair(Cyan,Black),
+      [PROCESS_R_STATE] = ColorPair(Green,Black),
+      [PROCESS_D_STATE] = ColorPair(Red+8,Black),
+      [PROCESS_HIGH_PRIORITY] = ColorPair(Red,Black),
+      [PROCESS_LOW_PRIORITY] = ColorPair(Green,Black),
+      [PROCESS_THREAD] = ColorPair(Green,Black),
+      [PROCESS_THREAD_BASENAME] = ColorPair(Green+8,Black),
+      [BAR_BORDER] = A_NORMAL,
+      [BAR_SHADOW] = ColorPairGrayBlack,
+      [SWAP] = ColorPair(Red,Black),
+      [GRAPH_1] = ColorPair(Cyan+8,Black),
+      [GRAPH_2] = ColorPair(Cyan,Black),
+      [MEMORY_USED] = ColorPair(Green,Black),
+      [MEMORY_BUFFERS] = ColorPair(Blue,Black),
+      [MEMORY_BUFFERS_TEXT] = ColorPair(Blue+8,Black),
+      [MEMORY_CACHE] = ColorPair(Yellow,Black),
+      [LOAD_AVERAGE_FIFTEEN] = ColorPair(Cyan,Black),
+      [LOAD_AVERAGE_FIVE] = ColorPair(Cyan+8,Black),
+      [LOAD_AVERAGE_ONE] = ColorPair(White+8,Black),
+      [LOAD] = A_NORMAL,
+      [HELP_BOLD] = ColorPair(Cyan+8,Black),
+      [CLOCK] = A_NORMAL,
+      [CHECK_BOX] = ColorPair(Cyan,Black),
+      [CHECK_MARK] = A_NORMAL,
+      [CHECK_TEXT] = A_NORMAL,
+      [HOSTNAME] = A_NORMAL,
+      [CPU_NICE] = ColorPair(Blue,Black),
+      [CPU_NICE_TEXT] = ColorPair(Blue+8,Black),
+      [CPU_NORMAL] = ColorPair(Green,Black),
+      [CPU_KERNEL] = ColorPair(Red,Black),
+      [CPU_IOWAIT] = ColorPair(Black+8, Black),
       [CPU_IRQ] = ColorPair(Yellow,Black),
       [CPU_SOFTIRQ] = ColorPair(Magenta,Black),
       [CPU_STEAL] = ColorPair(Cyan,Black),
@@ -715,8 +775,8 @@ void CRT_enableDelay() {
 void CRT_setColors(int colorScheme) {
    CRT_colorScheme = colorScheme;
 
-   for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
+   for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 16; j++) {
          if (ColorIndex(i,j) != ColorPairGrayBlack) {
             int bg = (colorScheme != COLORSCHEME_BLACKNIGHT)
                      ? (j==0 ? -1 : j)

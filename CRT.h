@@ -12,7 +12,7 @@ in the source distribution for its full text.
 #if HAVE_SETUID_ENABLED
 #endif
 
-#define ColorIndex(i,j) ((7-i)*8+j)
+#define ColorIndex(i,j) ((15-i)*16+j)
 
 #define ColorPair(i,j) COLOR_PAIR(ColorIndex(i,j))
 
@@ -55,7 +55,8 @@ typedef enum ColorSchemes_ {
    COLORSCHEME_MIDNIGHT = 4,
    COLORSCHEME_BLACKNIGHT = 5,
    COLORSCHEME_BROKENGRAY = 6,
-   LAST_COLORSCHEME = 7,
+   COLORSCHEME_DEFAULT_NOBOLD = 7,
+   LAST_COLORSCHEME = 8,
 } ColorSchemes;
 
 typedef enum ColorElements_ {
@@ -140,7 +141,7 @@ extern const char **CRT_treeStr;
 
 extern int CRT_delay;
 
-int* CRT_colors;
+extern int* CRT_colors;
 
 extern int CRT_colorSchemes[LAST_COLORSCHEME][LAST_COLORELEMENT];
 
@@ -150,13 +151,13 @@ extern int CRT_scrollHAmount;
 
 extern int CRT_scrollWheelVAmount;
 
-char* CRT_termType;
+extern char* CRT_termType;
 
 // TODO move color scheme to Settings, perhaps?
 
 extern int CRT_colorScheme;
 
-void *backtraceArray[128];
+extern void *backtraceArray[128];
 
 #if HAVE_SETUID_ENABLED
 
